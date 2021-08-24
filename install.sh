@@ -133,7 +133,7 @@ kernel_selector
 # Pacstrap (setting up a base sytem onto the new root).
 # As I said above, I am considering replacing gnome-software with pamac-flatpak-gnome as PackageKit seems very buggy on Arch Linux right now.
 echo "Installing the base system (it may take a while)."
-pacstrap /mnt base ${kernel} ${microcode} linux-firmware grub grub-btrfs snapper snap-pac snap-sync efibootmgr sudo networkmanager vim plasma-meta plasma-wayland-session pipewire-pulse pipewire-alsa reflector man-db konsole dolphin firefox
+pacstrap /mnt base ${kernel} ${microcode} linux-firmware grub grub-btrfs snapper snap-pac snap-sync efibootmgr sudo networkmanager vim plasma-meta plasma-wayland-session pipewire-pulse pipewire-alsa reflector man-db konsole dolphin firefox packagekit packagekit-qt5 fwupd
 
 # Generating /etc/fstab.
 echo "Generating a new fstab."
