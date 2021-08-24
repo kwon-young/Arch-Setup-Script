@@ -194,13 +194,6 @@ arch-chroot /mnt /bin/bash -e <<EOF
     # Creating grub config file.
     echo "Creating GRUB config file."
     grub-mkconfig -o /boot/grub/grub.cfg &>/dev/null
-
-    #Creating wheel user
-    #TODO read does not ask for user
-    read -r -p "Please choose an admin user to create: " USER
-    echo "Creating user $USER"
-    useradd -m -g wheel $USER
-    passwd $USER
 EOF
 
 #Giving wheel user sudo access.
@@ -227,21 +220,7 @@ systemctl enable snapper-timeline.timer --root=/mnt &>/dev/null
 systemctl enable snapper-cleanup.timer --root=/mnt &>/dev/null
 systemctl enable grub-btrfs.path --root=/mnt &>/dev/null
 
-# Setting up ZRAM
-MEMSIZE=$(awk '/^Mem/ {print $2}' <(free -m))
-if [ "${MEMSIZE}" -ge "8192" ]; then
-    ZRAMSIZE=8192
-else 
-    ZRAMSIZE=${MEMSIZE}
-fi 
-
-echo 'zram' > /mnt/etc/modules-load.d/zram.conf
-echo 'options zram num_devices=1' > /mnt/etc/modprobe.d/zram.conf
-chmod 600 /mnt/etc/modprobe.d/*
-echo 'KERNEL=="zram0", ATTR{disksize}="'"${ZRAMSIZE}"'M" RUN="/usr/bin/mkswap /dev/zram0", TAG+="systemd"' > /mnt/etc/udev/rules.d/99-zram.rules
-echo '# ZRAM' >> /mnt/etc/fstab
-echo '/dev/zram0 					none 		swap 		defaults 0 0' >> /mnt/etc/fstab
-
 # Finishing up
 echo "Done, you may now wish to reboot (further changes can be done by chrooting into /mnt)."
+echo "Do not forget to create user and set password for root and user"
 exit
